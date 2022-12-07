@@ -7,6 +7,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="assets/css/demo_1/style.css">
+<link rel="shortcut icon" href="assets/images/favicon.png"/>
 <title>DZ_MultiChat</title>
 <style>
 	  #container {
@@ -49,7 +51,7 @@
 		let response = await fetch('/multichat/member/findPwd?email=' + 
 				email.value+'&uid='+uid.value);
 		let jsonResult = await response.json();
-		if (jsonResult.status == false) {
+		if (jsonResult.status == true) {
 			alert(jsonResult.message);
 		}else{
 			alert(jsonResult.message);

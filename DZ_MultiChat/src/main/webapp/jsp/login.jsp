@@ -7,8 +7,11 @@
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="assets/vendors/core/core.css">
+<link rel="shortcut icon" href="assets/images/favicon.png"/>
 <meta charset="UTF-8">
 <title>DZ_MultiChat 로그인창</title>
+
 </head>
 <body>
 

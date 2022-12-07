@@ -7,6 +7,8 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<link rel="stylesheet" href="assets/css/demo_1/style.css">
+<link rel="shortcut icon" href="assets/images/favicon.png"/>
 <title>DZ_MultiChat</title>
 <style>
 #container {

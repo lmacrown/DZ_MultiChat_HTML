@@ -99,16 +99,15 @@ public class MemberDAO {
 	}
 	public void updateMember(MemberBean member) {
 		try {
+			System.out.println("회원정보 수정");
 			Connection con = dataFactory.getConnection();
-			String query = "insert into t_member";
-			query += " values(?,?,?,?,?)";
+			String query = "update t_member set pwd=?, name=?,email=? where id=?";
 			System.out.println("prepareStatememt: " + query);
 			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, member.getId());
-			pstmt.setString(2, member.getPwd());
-			pstmt.setString(3, member.getName());
-			pstmt.setString(4, member.getEmail());
-			pstmt.setString(5, member.getJoinDate());
+			pstmt.setString(1, member.getPwd());
+			pstmt.setString(2, member.getName());
+			pstmt.setString(3, member.getEmail());
+			pstmt.setString(4, member.getId());
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {

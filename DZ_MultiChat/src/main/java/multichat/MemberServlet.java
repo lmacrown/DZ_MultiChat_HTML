@@ -50,6 +50,7 @@ public class MemberServlet extends HttpServlet {
 			
 			boolean checking = memberDAO.checkMember(id,pw);
 			if(checking) {
+				request.getSession().setAttribute("uid", id);
 				System.out.println("로그인 성공");
 				jsonResult.put("status", true);
 				jsonResult.put("url", "/multichat/jsp/home.jsp");
@@ -122,19 +123,20 @@ public class MemberServlet extends HttpServlet {
 			System.out.println("jsonStr = " + jsonStr);
 			
 			JSONObject jsonMember = new JSONObject(jsonStr);
-
+			
+			String id=(String)request.getSession().getAttribute("uid");
 			String pwd = (String)jsonMember.get("pwd");
 			String name = (String)jsonMember.get("nickname");
 			String email = (String)jsonMember.get("email");
-			
+			System.out.println(id+" "+pwd+" "+name+" "+email+" ");
 			JSONObject jsonResult = new JSONObject();
 			MemberDAO memberDAO = new MemberDAO();
 			System.out.println("회원수정 시도");
 			try {
-				memberDAO.addMember(new MemberBean(pwd, name, email));
+				memberDAO.updateMember(new MemberBean(id,pwd, name, email));
 				System.out.println("회원수정 성공");
 				jsonResult.put("status", true);
-				jsonResult.put("url", "/multichat/jsp/login.jsp");
+				jsonResult.put("url", "/multichat/jsp/home.jsp");
 				jsonResult.put("message", "수정되었습니다");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -149,11 +151,11 @@ public class MemberServlet extends HttpServlet {
 		//아이디 찾기
 		else if (request.getRequestURI().equals("/multichat/member/findId")) {
 			String email = request.getParameter("email");
+			System.out.println(email);
 			
 			MemberDAO memberDAO = new MemberDAO();
 			String uid = memberDAO.findUserId(email);
 			JSONObject jsonResult = new JSONObject();
-			
 			if (uid == null) {
 				System.out.println("아이디 없음");
 				jsonResult.put("status", false);
@@ -199,10 +201,12 @@ public class MemberServlet extends HttpServlet {
 			System.out.println("삭제성공");
 			jsonResult.put("status", true);
 			jsonResult.put("message", "삭제되었습니다");
+			jsonResult.put("url", "/multichat/jsp/login.jsp");
 			
 			PrintWriter out = response.getWriter();
 			out.println(jsonResult.toString());
 		} 
+		//멤버 확인
 		else if (request.getRequestURI().equals("/multichat/member/view")) {
 			
 			String id = request.getParameter("id");
