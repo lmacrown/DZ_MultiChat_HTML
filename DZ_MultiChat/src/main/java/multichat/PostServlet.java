@@ -18,14 +18,14 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class MemberServlet
  */
-@WebServlet("/member/*")
-public class MemberServlet extends HttpServlet {
+@WebServlet("/post/*")
+public class PostServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MemberServlet() {
+    public PostServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,32 +35,66 @@ public class MemberServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("MemberSevlet============ : " + request.getRequestURI());
-		//로그인 체크
-		if(request.getRequestURI().equals("/multichat/member/loginCheck")){
-			System.out.println("logincheck 시작");
+		//공지 확인
+		if(request.getRequestURI().equals("/multichat/notice/confirm")){
+			System.out.println("공지확인 시작");
 			JSONObject jsonResult = new JSONObject();
-			MemberDAO memberDAO = new MemberDAO();
+			PostDAO PostDAO = new PostDAO();
 			
-			String id = request.getParameter("uid");
-			String pw = request.getParameter("pwd");
+			String title = request.getParameter("title");
 			
-			String checking = memberDAO.checkMember(id,pw);
-			if(checking.equals("admin"))
-				jsonResult.put("url", "/multichat/jsp/adminPage.jsp");
-			if(checking.equals("valid")) {
-				request.getSession().setAttribute("uid", id);
-				System.out.println("로그인 성공");
+			String checkPosts = PostDAO.checkPost(title);
+			
+			System.out.println("포스트 확인 성공");
+			jsonResult.put("message", checkPosts);
+			
+			PrintWriter out = response.getWriter();
+			out.println(jsonResult.toString());
+		}
+		//게시글 확인
+		if(request.getRequestURI().equals("/multichat/post/confirm")){
+			System.out.println("게시글확인 시작");
+			JSONObject jsonResult = new JSONObject();
+			PostDAO PostDAO = new PostDAO();
+			
+			String title = request.getParameter("title");
+			
+			String checkPosts = PostDAO.checkPost(title);
+			
+			System.out.println("포스트 확인 성공");
+			jsonResult.put("message", checkPosts);
+			
+			PrintWriter out = response.getWriter();
+			out.println(jsonResult.toString());
+		}
+		//게시글 작성
+		else if(request.getRequestURI().equals("/multichat/post/addPost")) {
+			String title = request.getParameter("title");
+			String content = request.getParameter("content");
+			String id=(String)request.getSession().getAttribute("uid");
+			System.out.println(title+" "+content+" "+id);
+			
+			SimpleDateFormat now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String nowTime = now.format(System.currentTimeMillis());
+			
+			PostDAO postDAO = new PostDAO();
+			JSONObject jsonResult = new JSONObject();
+			try {
+				postDAO.addPost(new PostBean(title, content, nowTime, id));
+				
 				jsonResult.put("status", true);
-				jsonResult.put("url", "/multichat/jsp/home.jsp");
-			}else if(checking.equals("not_match")) {
-				System.out.println("로그인 실패");
+				jsonResult.put("url", "/multichat/jsp/post/post.jsp");
+				jsonResult.put("message", "게시글 작성 완료");
+				System.out.println("게시글작성 성공");
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("게시글작성 실패");
 				jsonResult.put("status", false);
-			}else if (checking.equals("invalid")) {
-				System.out.println("휴면");
-				jsonResult.put("status", "invalid");
+				jsonResult.put("message", "게시글 작성 실패 ");
 			}
 			PrintWriter out = response.getWriter();
 			out.println(jsonResult.toString());
+			
 		}
 		//중복확인
 		else if (request.getRequestURI().equals("/multichat/member/dupUidCheck")) {

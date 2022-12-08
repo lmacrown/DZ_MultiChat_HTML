@@ -39,9 +39,11 @@ async function loginCheck() {
 
 	if (jsonResult.status == false) {
 		alert("아이디 또는 비밀번호가 다릅니다");
+	}else if(jsonResult.status == "invalid"){
+		alert("휴면 계정입니다");
 	}else{
 		location.href = jsonResult.url;
-		alert("성공");
+		alert("로그인 성공");
 	}
 }
 </script>

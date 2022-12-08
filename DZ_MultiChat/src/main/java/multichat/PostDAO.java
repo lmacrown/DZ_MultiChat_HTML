@@ -13,12 +13,12 @@ import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
 
-public class MemberDAO {
+public class PostDAO {
 	Connection conn;
 	PreparedStatement pstmt;
 	DataSource dataFactory;
 	
-	public MemberDAO() {
+	public PostDAO() {
 		try {
 			Context context = new InitialContext();
 			Context envContext = (Context) context.lookup("java:/comp/env");
@@ -28,24 +28,23 @@ public class MemberDAO {
 		}
 	}
 	
-	public List<MemberBean> listMembers() {
-		List<MemberBean> list = new ArrayList<>();
+	public List<PostBean> listNotices() {
+		List<PostBean> list = new ArrayList<>();
 		try {
 			// connDB();
 			conn = dataFactory.getConnection();
-			String query = "select * from t_member ";
+			String query = "select * from notice ";
 			System.out.println("prepareStatememt: " + query);
 			pstmt = conn.prepareStatement(query);
 			ResultSet rs = pstmt.executeQuery();
 			while (rs.next()) {
-				MemberBean member = new MemberBean(
-						rs.getString("id"),	
-						rs.getString("pwd"),	
-						rs.getString("name"),	
-						rs.getString("email"),	
-						rs.getString("joinDate"));
-				System.out.println(member);
-				list.add(member);
+				PostBean post = new PostBean(
+						rs.getString("title"),	
+						rs.getString("content"),	
+						rs.getString("registDate"),	
+						rs.getInt("views"));	
+				System.out.println(post);
+				list.add(post);
 			}
 			rs.close();
 			pstmt.close();
@@ -55,50 +54,79 @@ public class MemberDAO {
 		}
 		return list;
 	}
-
-	public String checkMember(String id, String pwd) {
+	public List<PostBean> listPosts() {
+		List<PostBean> list = new ArrayList<>();
 		try {
 			// connDB();
 			conn = dataFactory.getConnection();
-			String query = "select * from t_member where id = ? and pwd=?";
+			String query = "select * from t_board ";
 			System.out.println("prepareStatememt: " + query);
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, id);
-			pstmt.setString(2, pwd);
 			ResultSet rs = pstmt.executeQuery();
-			
-			if (rs.next()) {
-				String use_yn = rs.getString("use_yn");
-				String admin_id=rs.getString("id");
-				String admin_pwd=rs.getString("pwd");
-				if(admin_id.equals("admin") && admin_pwd.equals("admin"))
-					return "admin";
-				if(use_yn.equals("Y"))
-					return "valid";
-				else
-					return "invalid";
+			while (rs.next()) {
+				PostBean post = new PostBean(
+						rs.getString("title"),	
+						rs.getString("content"),	
+						rs.getString("registDate"),	
+						rs.getInt("views"));	
+				System.out.println(post);
+				list.add(post);
 			}
 			rs.close();
 			pstmt.close();
 			conn.close();
-			return "";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+	public String checkNotice(String title) {
+		try {
+			// connDB();
+			conn = dataFactory.getConnection();
+			String query = "select * from notice where title=?";
+			System.out.println("prepareStatememt: " + query);
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, title);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) 
+				return rs.getString("content");
+			else
+				return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 
-		return "not_match";		
+		return null;	
 	}
-	public void addMember(MemberBean member) {
+	public String checkPost(String title) {
+		try {
+			// connDB();
+			conn = dataFactory.getConnection();
+			String query = "select * from t_board where title=?";
+			System.out.println("prepareStatememt: " + query);
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, title);
+			ResultSet rs = pstmt.executeQuery();
+			if (rs.next()) 
+				return rs.getString("content");
+			else
+				return null;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} 
+		return null;	
+	}
+	public void addPost(PostBean postBean) {
 		try {
 			Connection con = dataFactory.getConnection();
-			String query = "insert into t_member";
-			query += " values(?,?,?,?,?)";
+			String query = "insert into t_board (title, content, registDate, id)";
+			query += " values (?,?,?,?)";
 			System.out.println("prepareStatememt: " + query);
 			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, member.getId());
-			pstmt.setString(2, member.getPwd());
-			pstmt.setString(3, member.getName());
-			pstmt.setString(4, member.getEmail());
-			pstmt.setString(5, member.getJoinDate());
+			pstmt.setString(1, postBean.getTitle());
+			pstmt.setString(2, postBean.getContent());
+			pstmt.setString(3, postBean.getRegistDate());
+			pstmt.setString(4, postBean.getId());
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (Exception e) {

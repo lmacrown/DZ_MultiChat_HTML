@@ -1,23 +1,41 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page import="multichat.*"%>
 <%@page import="java.util.List"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="../assets/css/demo_1/style.css">
-<link rel="shortcut icon" href="../assets/images/favicon.png"/>
+<link rel="shortcut icon" href="../assets/images/favicon.png" />
 <title>DZ_MultiChat 게시글</title>
+<style>
+table, th, td, tr {
+  border:1px solid #222;  /* 표 테두리 */
+  border-collapse: collapse;  /* 테두리 1줄만 표시 */ 
+}
+table{
+  margin-left: auto;
+  margin-right: auto;
+}
+tr{
+text-align: center;
+}
+</style>
 </head>
 <body class="sidebar-dark">
+<%
+PostDAO postDAO = new PostDAO();
+List<PostBean> list = postDAO.listPosts();
+request.setAttribute("list",list);
+%> 
 	<div class="main-wrapper">
 		<nav class="sidebar">
 			<div class="sidebar-header">
 				<a href="#" class="sidebar-brand"> DZ<span>CHAT</span>
 				</a>
-				<div class="sidebar-toggler not-active">
+				<div class="sidebar-toggler active">
 					<span></span> <span></span> <span></span>
 				</div>
 			</div>
@@ -44,9 +62,88 @@
 						href="/multichat/jsp/post/QnA.jsp"> <i class="link-icon"
 							data-feather="inbox"></i> <span class="link-title">QnA</span>
 					</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="login.jsp"> <i class="link-icon"
+							data-feather="log-out"></i> <span class="link-title">로그아웃</span>
+					</a></li>
 				</ul>
 			</div>
 		</nav>
+		<div class="page-wrapper">
+			<a href="#" class="sidebar-toggler"> <i data-feather="menu"></i>
+			</a>
+			<div class="navbar-content">
+
+				<div class="page-content">
+					<div class="card">
+						<div
+							class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+							<div>
+								<h4 class="mb-3 mb-md-0" style="margin-left: auto;margin-right: auto; margin-top: 10px; text-align: center;">공지사항</h4>
+							</div>
+							<div class="d-flex align-items-center flex-wrap text-nowrap">
+								<button type="button" id="createChat" style="margin-top: 10px;" onclick="location.href='postCreate.jsp'"
+									class="btn btn-outline-info btn-icon-text mr-2 d-none d-md-block">
+									<i class="btn-icon-prepend" data-feather="download"></i> 게시글 생성
+								</button>  
+							</div>
+						</div>
+
+						<div class="row">
+							<div class="col-lg-7 col-xl-8 stretch-card">
+								<div class="table-responsive">
+									<table class="table table-hover mb-0" style="margin-left: auto;margin-right: auto;">
+										<thead>
+											<tr>
+												<th style="height: 20px">게시글 제목</th>
+												<!-- <th style="height: 20px">공지 내용</th> -->
+												<th style="height: 20px">생성일</th>
+												<th style="height: 20px">조회수</th>
+											</tr>
+										</thead>
+										<tbody>
+		
+							<c:forEach var="postDAO" items="${list}">
+										<tr>
+											<td><a href='#' onClick='confirm(event, ${postDAO.title})'>${postDAO.title}</a> </td> 
+											<div id="confirm_${postDAO.title}"></div>
+											<%-- <td>${postDAO.content} </td> --%>
+											<td>${postDAO.registDate} </td>
+											<td>${postDAO.views} </td>
+										</tr>
+							</c:forEach>
+						</tbody>
+<script type="text/javascript">
+async function confirm(event, postDAO.title) {
+	event.preventDefault();
+	
+	let Div = document.querySelector("#confirm_" + postDAO.title);
+	if (Div != null) {
+		let response = await fetch('/multichat/post/confirm?title=' + postDAO.title);
+		let json = await response.json();
+		if (json.status) {
+			let result = json.result;
+			let text = "";
+			for (i=0;i<result.length;i++) {
+				text += dan + '*' + result[i].i + '=' + result[i].rst + "<br/>"; 
+			}
+			danDiv.innerHTML = text;
+		} else {
+			alert(json.message);
+		}
+	}
+	return false;
+}
+</script>
+					
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<script src="../assets/vendors/core/core.js"></script>
 
@@ -65,5 +162,6 @@
 	<!-- custom js for this page -->
 	<script src="../assets/js/dashboard.js"></script>
 	<script src="../assets/js/datepicker.js"></script>
+	<!-- end custom js for this page -->
 </body>
 </html>

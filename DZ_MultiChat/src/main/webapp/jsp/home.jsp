@@ -72,17 +72,18 @@ ResultSet rs = stmt.executeQuery("select * from chattingroom");
 						href="/multichat/jsp/post/QnA.jsp"> <i class="link-icon"
 							data-feather="inbox"></i> <span class="link-title">QnA</span>
 					</a></li>
+					<li class="nav-item"><a class="nav-link"
+						href="login.jsp"> <i class="link-icon"
+							data-feather="log-out"></i> <span class="link-title">로그아웃</span>
+					</a></li>
 				</ul>
 			</div>
 		</nav>
 
 		<div class="page-wrapper">
-
-
 			<a href="#" class="sidebar-toggler"> <i data-feather="menu"></i>
 			</a>
 			<div class="navbar-content">
-
 
 				<div class="page-content">
 					<div class="card" style="width: 50%">
@@ -94,20 +95,19 @@ ResultSet rs = stmt.executeQuery("select * from chattingroom");
 							<div class="d-flex align-items-center flex-wrap text-nowrap">
 								<button type="button" id="createChat" style="margin-top: 10px;"
 									class="btn btn-outline-info btn-icon-text mr-2 d-none d-md-block">
-									<i class="btn-icon-prepend" data-feather="download"></i> 채팅방 생성
+									<i class="btn-icon-prepend" data-feather="message-circle"></i> 채팅방 생성
 								</button> 
 							</div>
 						</div>
 
-						<c:set var="i" value="1" />
 						<div class="row">
 							<div class="col-lg-7 col-xl-8 stretch-card">
 								<div class="table-responsive">
 									<table class="table table-hover mb-0">
 										<thead>
 											<tr>
-												<th class="pt-0">방 이름</th>
-												<th class="pt-0">생성 일자</th>
+												<th style="height: 20px">방 이름</th>
+												<th style="height: 20px">생성 일자</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -137,15 +137,6 @@ async function chatting(event, dan) {
 	return false;
 }
 </script>
-<c:forEach var="dan" begin="1" end="3" >
-<tr>
-	<td><%=rs.getString("title")%></td>
-	<td><a href='#' onClick='jsDan(event, ${dan})'>${rs.getString("createdate")}</a></td>
-	</tr>
-</c:forEach>
-
-
-
 <%
 
 	}
