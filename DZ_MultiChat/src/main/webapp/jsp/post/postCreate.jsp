@@ -44,7 +44,7 @@
 						href="/multichat/jsp/post/QnA.jsp"> <i class="link-icon"
 							data-feather="inbox"></i> <span class="link-title">QnA</span>
 					</a></li>
-					<li class="nav-item"><a class="nav-link" href="login.jsp">
+					<li class="nav-item"><a class="nav-link" href="../login.jsp">
 							<i class="link-icon" data-feather="log-out"></i> <span
 							class="link-title">로그아웃</span>
 					</a></li>
@@ -112,7 +112,6 @@
 		if (jsonResult.status == false) {
 			alert(jsonResult.message);
 		}else{
-			
 			alert(jsonResult.message);
 			location.href = jsonResult.url;
 		}

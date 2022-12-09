@@ -81,7 +81,7 @@ public class MemberDAO {
 			rs.close();
 			pstmt.close();
 			conn.close();
-			return "";
+			return "not_match";
 		} catch (Exception e) {
 			e.printStackTrace();
 		} 

@@ -63,7 +63,7 @@ request.setAttribute("list",list);
 							data-feather="inbox"></i> <span class="link-title">QnA</span>
 					</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="login.jsp"> <i class="link-icon"
+						href="../login.jsp"> <i class="link-icon"
 							data-feather="log-out"></i> <span class="link-title">로그아웃</span>
 					</a></li>
 				</ul>
@@ -79,7 +79,7 @@ request.setAttribute("list",list);
 						<div
 							class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
 							<div>
-								<h4 class="mb-3 mb-md-0" style="margin-left: auto;margin-right: auto; margin-top: 10px; text-align: center;">공지사항</h4>
+								<h4 class="mb-3 mb-md-0" style="margin-left: auto;margin-right: auto; margin-top: 10px; text-align: center;">게시글 목록</h4>
 							</div>
 							<div class="d-flex align-items-center flex-wrap text-nowrap">
 								<button type="button" id="createChat" style="margin-top: 10px;" onclick="location.href='postCreate.jsp'"
@@ -105,36 +105,13 @@ request.setAttribute("list",list);
 		
 							<c:forEach var="postDAO" items="${list}">
 										<tr>
-											<td><a href='#' onClick='confirm(event, ${postDAO.title})'>${postDAO.title}</a> </td> 
-											<div id="confirm_${postDAO.title}"></div>
+											<td><a href='#' onClick="location.href='/multichat/post/postCheck?title=${postDAO.title}'">${postDAO.title}</a> </td> 
 											<%-- <td>${postDAO.content} </td> --%>
 											<td>${postDAO.registDate} </td>
 											<td>${postDAO.views} </td>
 										</tr>
 							</c:forEach>
 						</tbody>
-<script type="text/javascript">
-async function confirm(event, postDAO.title) {
-	event.preventDefault();
-	
-	let Div = document.querySelector("#confirm_" + postDAO.title);
-	if (Div != null) {
-		let response = await fetch('/multichat/post/confirm?title=' + postDAO.title);
-		let json = await response.json();
-		if (json.status) {
-			let result = json.result;
-			let text = "";
-			for (i=0;i<result.length;i++) {
-				text += dan + '*' + result[i].i + '=' + result[i].rst + "<br/>"; 
-			}
-			danDiv.innerHTML = text;
-		} else {
-			alert(json.message);
-		}
-	}
-	return false;
-}
-</script>
 					
 									</table>
 								</div>

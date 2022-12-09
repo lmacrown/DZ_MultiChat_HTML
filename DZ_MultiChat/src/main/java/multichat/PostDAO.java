@@ -69,7 +69,6 @@ public class PostDAO {
 						rs.getString("content"),	
 						rs.getString("registDate"),	
 						rs.getInt("views"));	
-				System.out.println(post);
 				list.add(post);
 			}
 			rs.close();
@@ -80,42 +79,29 @@ public class PostDAO {
 		}
 		return list;
 	}
-	public String checkNotice(String title) {
-		try {
-			// connDB();
-			conn = dataFactory.getConnection();
-			String query = "select * from notice where title=?";
-			System.out.println("prepareStatememt: " + query);
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, title);
-			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) 
-				return rs.getString("content");
-			else
-				return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		return null;	
-	}
-	public String checkPost(String title) {
-		try {
-			// connDB();
-			conn = dataFactory.getConnection();
-			String query = "select * from t_board where title=?";
-			System.out.println("prepareStatememt: " + query);
-			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, title);
-			ResultSet rs = pstmt.executeQuery();
-			if (rs.next()) 
-				return rs.getString("content");
-			else
-				return null;
-		} catch (Exception e) {
-			e.printStackTrace();
-		} 
-		return null;	
-	}
+
+	/*
+	 * public String checkNotice(String title) { try { // connDB(); conn =
+	 * dataFactory.getConnection(); String query =
+	 * "select * from notice where title=?"; System.out.println("prepareStatememt: "
+	 * + query); pstmt = conn.prepareStatement(query); pstmt.setString(1, title);
+	 * ResultSet rs = pstmt.executeQuery(); if (rs.next()) return
+	 * rs.getString("content"); else return null; } catch (Exception e) {
+	 * e.printStackTrace(); } return null; }
+	 */
+	/*
+	 * public PostBean checkNotice(String title) {
+	 * 
+	 * try { // connDB(); //생성일, 작성자, 내용 conn = dataFactory.getConnection(); String
+	 * query = "select * from notice where title=?";
+	 * System.out.println("prepareStatememt: " + query); pstmt =
+	 * conn.prepareStatement(query); pstmt.setString(1, title); ResultSet rs =
+	 * pstmt.executeQuery(); System.out.println("checking"); if (rs.next()) {
+	 * PostBean post = new PostBean( rs.getString("title"), rs.getString("content"),
+	 * rs.getString("registDate"), rs.getInt("views")); System.out.println(post);
+	 * return post; } rs.close(); pstmt.close(); conn.close(); } catch (Exception e)
+	 * { e.printStackTrace(); } return null; }
+	 */
 	public void addPost(PostBean postBean) {
 		try {
 			Connection con = dataFactory.getConnection();
@@ -190,29 +176,26 @@ public class PostDAO {
 		}
 	}
 	
-	public MemberBean viewMember(String id) {
+	public PostBean checkNotice(String title) {
 		try {
 			// connDB();
 			conn = dataFactory.getConnection();
-			String query = "select * from t_member where id = ?";
+			String query = "select * from notice where title = ?";
 			System.out.println("prepareStatememt: " + query);
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, id);
+			pstmt.setString(1, title);
 			ResultSet rs = pstmt.executeQuery();
-			MemberBean memberBean = null;
-			System.out.println("중복체크");
+			PostBean postBean = null;
+			System.out.println("공지 확인");
 			if (rs.next()) {
-				memberBean = new MemberBean(
-						rs.getString("id"),	
-						rs.getString("pwd"),	
-						rs.getString("name"),	
-						rs.getString("email"),	
-						rs.getString("joinDate"));
+				postBean  = new PostBean(
+						rs.getString("title"),	
+						rs.getString("content"),	
+						rs.getString("registDate"),	
+						rs.getInt("views"));
 			}
 			rs.close();
-			System.out.println("중복체크 완료");
-			System.out.println(memberBean);
-			return memberBean;
+			return postBean;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -223,7 +206,37 @@ public class PostDAO {
 		}
 		return null;		
 	}
-
+	public PostBean checkPost(String title) {
+		try {
+			// connDB();
+			conn = dataFactory.getConnection();
+			String query = "select * from t_board where title = ?";
+			System.out.println("prepareStatememt: " + query);
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, title);
+			ResultSet rs = pstmt.executeQuery();
+			PostBean postBean = null;
+			System.out.println("게시글 확인");
+			if (rs.next()) {
+				postBean  = new PostBean(
+						rs.getString("title"),	
+						rs.getString("content"),	
+						rs.getString("registDate"),	
+						rs.getInt("views"),
+						rs.getString("id"));
+			}
+			rs.close();
+			return postBean;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (Exception e) {}
+		}
+		return null;		
+	}
 	/*
 	 * public int insertMember(MemberBean memberBean) throws SQLException{ try { //
 	 * connDB(); conn = dataFactory.getConnection(); String query =

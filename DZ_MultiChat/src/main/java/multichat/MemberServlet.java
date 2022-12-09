@@ -203,8 +203,7 @@ public class MemberServlet extends HttpServlet {
 			jsonResult.put("status", true);
 			jsonResult.put("message", "삭제되었습니다");
 			
-			PrintWriter out = response.getWriter();
-			out.println(jsonResult.toString());
+			response.sendRedirect("/multichat/jsp/adminPage.jsp");
 		} 
 		//회원 휴면
 				else if (request.getRequestURI().equals("/multichat/member/restCheck")) {
@@ -214,6 +213,8 @@ public class MemberServlet extends HttpServlet {
 					memberDAO.restCheck(uid);
 
 					System.out.println("휴면성공");
+					
+					response.sendRedirect("/multichat/jsp/adminPage.jsp");
 				
 				} 
 		//회원 휴면 해제
@@ -224,6 +225,8 @@ public class MemberServlet extends HttpServlet {
 					memberDAO.restUncheck(uid);
 
 					System.out.println("휴면해제성공");
+					
+					response.sendRedirect("/multichat/jsp/adminPage.jsp");
 				} 
 		//멤버 확인
 		else if (request.getRequestURI().equals("/multichat/member/view")) {

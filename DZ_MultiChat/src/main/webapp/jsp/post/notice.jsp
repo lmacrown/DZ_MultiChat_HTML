@@ -63,7 +63,7 @@ request.setAttribute("list",list);
 							data-feather="inbox"></i> <span class="link-title">QnA</span>
 					</a></li>
 					<li class="nav-item"><a class="nav-link"
-						href="login.jsp"> <i class="link-icon"
+						href="../login.jsp"> <i class="link-icon"
 							data-feather="log-out"></i> <span class="link-title">로그아웃</span>
 					</a></li>
 				</ul>
@@ -105,37 +105,15 @@ request.setAttribute("list",list);
 		
 							<c:forEach var="postDAO" items="${list}">
 										<tr>
-											<td><a href='#' onClick='confirm(event, ${postDAO.title})'>${postDAO.title}</a> </td> 
-											<div id="confirm_${postDAO.title}"></div>
+											<td><a href='#' onclick="location.href='/multichat/post/noticeCheck?title=${postDAO.title}'">${postDAO.title} </a></td>
 											<%-- <td>${postDAO.content} </td> --%>
+											<%-- <td><input type="button" value="삭제" 
+											onclick="location.href='/multichat/member/delete?id=${memberDAO.id}'"> --%>
 											<td>${postDAO.registDate} </td>
 											<td>${postDAO.views} </td>
 										</tr>
 							</c:forEach>
-						</tbody>
-<script type="text/javascript">
-async function confirm(event, postDAO.title) {
-	event.preventDefault();
-	
-	let Div = document.querySelector("#confirm_" + postDAO.title);
-	if (Div != null) {
-		let response = await fetch('/multichat/post/confirm?title=' + postDAO.title);
-		let json = await response.json();
-		if (json.status) {
-			let result = json.result;
-			let text = "";
-			for (i=0;i<result.length;i++) {
-				text += dan + '*' + result[i].i + '=' + result[i].rst + "<br/>"; 
-			}
-			danDiv.innerHTML = text;
-		} else {
-			alert(json.message);
-		}
-	}
-	return false;
-}
-</script>
-					
+						</tbody>	
 									</table>
 								</div>
 							</div>
