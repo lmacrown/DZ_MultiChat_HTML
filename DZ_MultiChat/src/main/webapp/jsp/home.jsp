@@ -1,21 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page import="multichat.*"%>
 <%@page import="java.util.List"%>
-<%@ page import="java.sql.DriverManager"%>
-<%@ page import="java.sql.Connection"%>
-<%@ page import="java.sql.Statement"%>
-<%@ page import="java.sql.ResultSet"%>
-<%@ page import="javax.sql.DataSource"%>
-<%@ page import="javax.naming.Context"%>
-<%@ page import="javax.naming.InitialContext"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-	<%!// 변수 선언
-Connection conn = null;
-Statement stmt = null;
-ResultSet rs = null;
-
-DataSource dataFactory;%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,19 +14,11 @@ DataSource dataFactory;%>
 <link rel="shortcut icon" href="assets/images/favicon.png" />
 </head>
 <body class="sidebar-dark">
-
-<%
-try {
-Context context = new InitialContext();
-Context envContext = (Context) context.lookup("java:/comp/env");
-dataFactory = (DataSource) envContext.lookup("jdbc/pro05DB");
-// 데이터베이스에 연결하는 작업 수행
-Connection conn = dataFactory.getConnection();
-// 쿼리를 생성할 객체 생성
-Statement stmt = conn.createStatement();
-// 쿼리 생성
-ResultSet rs = stmt.executeQuery("select * from chattingroom");
-%>
+	<%
+	ChattingDAO chattingDAO = new ChattingDAO();
+	List<ChattingBean> list = chattingDAO.listChatting();
+	request.setAttribute("chatList", list);
+	%>
 	<div class="main-wrapper">
 		<nav class="sidebar">
 			<div class="sidebar-header">
@@ -52,10 +31,14 @@ ResultSet rs = stmt.executeQuery("select * from chattingroom");
 			<div class="sidebar-body">
 				<ul class="nav">
 
-					<li class="nav-item"><a
+					<!-- <li class="nav-item"><a
 						href="/multichat/jsp/member/memberUpdate.jsp" class="nav-link">
 							<i class="link-icon" data-feather="box"></i> <span
 							class="link-title">회원정보수정</span>
+					</a></li> -->
+					<li class="nav-item"><a href="/multichat/jsp/home.jsp"
+						class="nav-link"> <i class="link-icon" data-feather="box"></i>
+							<span class="link-title">홈</span>
 					</a></li>
 
 					<li class="nav-item nav-category">게시글</li>
@@ -72,103 +55,103 @@ ResultSet rs = stmt.executeQuery("select * from chattingroom");
 						href="/multichat/jsp/post/QnA.jsp"> <i class="link-icon"
 							data-feather="inbox"></i> <span class="link-title">QnA</span>
 					</a></li>
-					<li class="nav-item"><a class="nav-link"
-						href="login.jsp"> <i class="link-icon"
-							data-feather="log-out"></i> <span class="link-title">로그아웃</span>
+					<li class="nav-item"><a class="nav-link" href="login.jsp">
+							<i class="link-icon" data-feather="log-out"></i> <span
+							class="link-title">로그아웃</span>
 					</a></li>
 				</ul>
 			</div>
 		</nav>
 
 		<div class="page-wrapper">
-			<a href="#" class="sidebar-toggler"> <i data-feather="menu"></i>
-			</a>
-			<div class="navbar-content">
+			<nav class="navbar">
+				<div class="navbar-content">
+					<ul class="navbar-nav">
+						<li class="nav-item dropdown nav-profile"><a
+							class="nav-link dropdown-toggle" href="#" id="profileDropdown"
+							role="button" data-toggle="dropdown" aria-haspopup="true"
+							aria-expanded="false"> <img
+								src="https://via.placeholder.com/30x30" alt="userr">
+						</a>
+							<div class="dropdown-menu" aria-labelledby="profileDropdown">
+								<div
+									class="dropdown-header d-flex flex-column align-items-center">
+									<div class="figure mb-3">
+										<img src="https://via.placeholder.com/80x80" alt="">
+									</div>
+									<div class="info text-center">
+										<p class="name font-weight-bold mb-0">Amiah Burton</p>
+										<p class="email text-muted mb-3">amiahburton@gmail.com</p>
+									</div>
+								</div>
+								<div class="dropdown-body">
+									<ul class="profile-nav p-0 pt-3">
+										<li class="nav-item"><a
+											href="/multichat/member/view"
+											class="nav-link"> <i data-feather="user"></i> <span>Profile</span>
+										</a></li>
+										<li class="nav-item"><a
+											href="/multichat/jsp/member/memberUpdate.jsp"
+											class="nav-link"> <i data-feather="edit"></i> <span>Edit
+													Profile</span>
+										</a></li>
 
-				<div class="page-content">
-					<div class="card" style="width: 50%">
-						<div
-							class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
-							<div>
-								<h4 class="mb-3 mb-md-0" style="margin-left: 10px; margin-top: 10px;">채팅방 목록</h4>
-							</div>
-							<div class="d-flex align-items-center flex-wrap text-nowrap">
-								<button type="button" id="createChat" style="margin-top: 10px;"
-									class="btn btn-outline-info btn-icon-text mr-2 d-none d-md-block">
-									<i class="btn-icon-prepend" data-feather="message-circle"></i> 채팅방 생성
-								</button> 
-							</div>
-						</div>
+										<li class="nav-item">
+										<a class="nav-link" href="login.jsp"
+											class="nav-link"> <i data-feather="log-out"></i> <span>Log
+													Out</span>
+										</a></li>
+									</ul>
+								</div>
+							</div></li>
+					</ul>
+				</div>
+				<a href="#" class="sidebar-toggler"> <i data-feather="menu"></i>
+				</a>
+				<div class="navbar-content">
 
-						<div class="row">
-							<div class="col-lg-7 col-xl-8 stretch-card">
-								<div class="table-responsive">
-									<table class="table table-hover mb-0">
+					<div class="page-content">
+						<div class="card" style="width: 50%">
+							<div
+								class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+								<div>
+									<h4 class="mb-3 mb-md-0"
+										style="margin-left: 10px; margin-top: 10px;">채팅방 목록</h4>
+								</div>
+								<div class="d-flex align-items-center flex-wrap text-nowrap">
+									<button type="button" id="createChat" style="margin-top: 20%;"
+										class="btn btn-outline-info btn-icon-text mr-2 d-none d-md-block">
+										<i class="btn-icon-prepend" data-feather="message-circle"></i>
+										채팅방 생성
+									</button>
+								</div>
+							</div>
+							<div class="row" style="margin-left: auto; margin-right: auto;">
+								<div style="margin-left: 20px; width: 40%;">
+									<table class="table table-hover mb-0" style="width: 40%">
 										<thead>
-											<tr>
-												<th style="height: 20px">방 이름</th>
-												<th style="height: 20px">생성 일자</th>
+											<tr style="height: 20px; text-align: center;">
+												<th style="width: 40%">방 이름</th>
+												<th style="width: 40%">생성 일자</th>
+												<th style="width: 40%">인원수</th>
 											</tr>
 										</thead>
 										<tbody>
-
-<%
-	while (rs.next()) {
-%>
-<script type="text/javascript">
-async function chatting(event, dan) {
-	event.preventDefault();
-	
-	let danDiv = document.querySelector("#dan_" + dan);
-	if (danDiv != null) {
-		let response = await fetch('/pro00/dan?dan=' + dan);
-		let json = await response.json();
-		if (json.status) {
-			let result = json.result;
-			let text = "";
-			for (i=0;i<result.length;i++) {
-				text += dan + '*' + result[i].i + '=' + result[i].rst + "<br/>"; 
-			}
-			danDiv.innerHTML = text;
-		} else {
-			alert(json.message);
-		}
-	}
-	return false;
-}
-</script>
-<%
-
-	}
-	}
- catch (Exception e) {
-e.printStackTrace();
-} finally {
-try {
-if (rs != null) {
-rs.close();
-}
-if (stmt != null) {
-stmt.close();
-}
-if (conn != null) {
-conn.close();
-}
-} catch (Exception e) {
-e.printStackTrace();
-}
-}
-
-%>
-									
-									</tbody>
+											<c:forEach var="chattingDAO" items="${chatList}">
+												<tr>
+													<td style="width: 40%"><a href='#' onclick="location.href='/multichat/chatting/chatroom?title=${chattingDAO.title}'">${chattingDAO.title}</a></td>
+													<td style="width: 40%">${chattingDAO.createDate}</td>
+													<td style="width: 40%">${chattingDAO.users}</td>
+												</tr>
+											</c:forEach>
+										</tbody>
 									</table>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			</nav>
 		</div>
 	</div>
 	<script src="assets/vendors/core/core.js"></script>

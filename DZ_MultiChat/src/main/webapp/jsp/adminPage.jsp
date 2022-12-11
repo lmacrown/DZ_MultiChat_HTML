@@ -104,7 +104,7 @@ request.setAttribute("list",list);
 											<td><%=rs.getString("email")%></td>
 											<td><%=rs.getString("joinDate") %></td> --%>
 											<td><input type="button" value="삭제" 
-											onclick="location.href='/multichat/member/delete?id=${memberDAO.id}'">
+											onclick="location.href='/multichat/member/admindelete?id=${memberDAO.id}'">
 											<input type="button" value="휴면" 
 											onclick="location.href='/multichat/member/restCheck?id=${memberDAO.id}'">
 											<input type="button" value="해제" 

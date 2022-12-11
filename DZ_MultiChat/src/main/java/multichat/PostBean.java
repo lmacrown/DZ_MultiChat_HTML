@@ -17,6 +17,12 @@ public class PostBean {
 	      this.content = content;
 	      this.registDate = registDate;
 	}
+	public PostBean(String title, String registDate, int views) {
+	      super();
+	      this.title = title;
+	      this.registDate = registDate;
+	      this.views= views;
+	}
 	public PostBean(String title, String content, String registDate, String id) {
 	      super();
 	      this.title = title;

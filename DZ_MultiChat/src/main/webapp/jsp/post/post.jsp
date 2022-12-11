@@ -12,24 +12,26 @@
 <title>DZ_MultiChat 게시글</title>
 <style>
 table, th, td, tr {
-  border:1px solid #222;  /* 표 테두리 */
-  border-collapse: collapse;  /* 테두리 1줄만 표시 */ 
+	border: 1px solid #222; /* 표 테두리 */
+	border-collapse: collapse; /* 테두리 1줄만 표시 */
 }
-table{
-  margin-left: auto;
-  margin-right: auto;
+
+table {
+	margin-left: auto;
+	margin-right: auto;
 }
-tr{
-text-align: center;
+
+tr {
+	text-align: center;
 }
 </style>
 </head>
 <body class="sidebar-dark">
-<%
-PostDAO postDAO = new PostDAO();
-List<PostBean> list = postDAO.listPosts();
-request.setAttribute("list",list);
-%> 
+	<%
+	PostDAO postDAO = new PostDAO();
+	List<PostBean> list = postDAO.listPosts();
+	request.setAttribute("list", list);
+	%>
 	<div class="main-wrapper">
 		<nav class="sidebar">
 			<div class="sidebar-header">
@@ -42,10 +44,9 @@ request.setAttribute("list",list);
 			<div class="sidebar-body">
 				<ul class="nav">
 
-					<li class="nav-item"><a
-						href="/multichat/jsp/member/memberUpdate.jsp" class="nav-link">
-							<i class="link-icon" data-feather="box"></i> <span
-							class="link-title">회원정보수정</span>
+					<li class="nav-item"><a href="/multichat/jsp/home.jsp"
+						class="nav-link"> <i class="link-icon" data-feather="box"></i>
+							<span class="link-title">홈</span>
 					</a></li>
 
 					<li class="nav-item nav-category">게시글</li>
@@ -62,64 +63,118 @@ request.setAttribute("list",list);
 						href="/multichat/jsp/post/QnA.jsp"> <i class="link-icon"
 							data-feather="inbox"></i> <span class="link-title">QnA</span>
 					</a></li>
-					<li class="nav-item"><a class="nav-link"
-						href="../login.jsp"> <i class="link-icon"
-							data-feather="log-out"></i> <span class="link-title">로그아웃</span>
+					<li class="nav-item"><a class="nav-link" href="../login.jsp">
+							<i class="link-icon" data-feather="log-out"></i> <span
+							class="link-title">로그아웃</span>
 					</a></li>
 				</ul>
 			</div>
 		</nav>
 		<div class="page-wrapper">
-			<a href="#" class="sidebar-toggler"> <i data-feather="menu"></i>
-			</a>
-			<div class="navbar-content">
+			<nav class="navbar">
+				<div class="navbar-content">
+					<ul class="navbar-nav">
+						<li class="nav-item dropdown nav-profile"><a
+							class="nav-link dropdown-toggle" href="#" id="profileDropdown"
+							role="button" data-toggle="dropdown" aria-haspopup="true"
+							aria-expanded="false"> <img
+								src="https://via.placeholder.com/30x30" alt="userr">
+						</a>
+							<div class="dropdown-menu" aria-labelledby="profileDropdown">
+								<div
+									class="dropdown-header d-flex flex-column align-items-center">
+									<div class="figure mb-3">
+										<img src="https://via.placeholder.com/80x80" alt="">
+									</div>
+									<div class="info text-center">
+										<p class="name font-weight-bold mb-0">Amiah Burton</p>
+										<p class="email text-muted mb-3">amiahburton@gmail.com</p>
+									</div>
+								</div>
+								<div class="dropdown-body">
+									<ul class="profile-nav p-0 pt-3">
+										<li class="nav-item"><a
+											href="/multichat/member/view"
+											class="nav-link"> <i data-feather="user"></i> <span>Profile</span>
+										</a></li>
+										<li class="nav-item"><a
+											href="/multichat/jsp/member/memberUpdate.jsp"
+											class="nav-link"> <i data-feather="edit"></i> <span>Edit
+													Profile</span>
+										</a></li>
+										<li class="nav-item">
+										<a class="nav-link" href="../login.jsp"> 
+										<i data-feather="log-out"></i> 
+										<span>LogOut</span>
+										</a></li>
+									</ul>
+								</div>
+							</div></li>
+					</ul>
+				</div>
+				<a href="#" class="sidebar-toggler"> <i data-feather="menu"></i>
+				</a>
+				<div class="navbar-content">
 
-				<div class="page-content">
-					<div class="card">
-						<div
-							class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
-							<div>
-								<h4 class="mb-3 mb-md-0" style="margin-left: auto;margin-right: auto; margin-top: 10px; text-align: center;">게시글 목록</h4>
+					<div class="page-content">
+						<div class="card">
+							<div
+								class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+								<div>
+									<h4 class="mb-3 mb-md-0"
+										style="margin-left: auto; margin-right: auto; margin-top: 10px; text-align: center;">게시글
+										목록</h4>
+								</div>
+								<div class="d-flex align-items-center flex-wrap text-nowrap">
+									<button type="button" id="createChat" style="margin-top: 10px;"
+										onclick="location.href='postCreate.jsp'"
+										class="btn btn-outline-info btn-icon-text mr-2 d-none d-md-block">
+										<i class="btn-icon-prepend" data-feather="download"></i> 게시글
+										생성
+									</button>
+								</div>
 							</div>
-							<div class="d-flex align-items-center flex-wrap text-nowrap">
-								<button type="button" id="createChat" style="margin-top: 10px;" onclick="location.href='postCreate.jsp'"
-									class="btn btn-outline-info btn-icon-text mr-2 d-none d-md-block">
-									<i class="btn-icon-prepend" data-feather="download"></i> 게시글 생성
-								</button>  
-							</div>
-						</div>
+							<form action="/multichat/jsp/post/postSearch.jsp" method="post">
+								<div style="margin-bottom: 20px">
+									검색 : <input type="text" id="title" name="title"> <button
+										type="submit" value="검색" id="searchTitle">검색</button>
+								</div>
+							</form>
 
-						<div class="row">
-							<div class="col-lg-7 col-xl-8 stretch-card">
-								<div class="table-responsive">
-									<table class="table table-hover mb-0" style="margin-left: auto;margin-right: auto;">
-										<thead>
-											<tr>
-												<th style="height: 20px">게시글 제목</th>
-												<!-- <th style="height: 20px">공지 내용</th> -->
-												<th style="height: 20px">생성일</th>
-												<th style="height: 20px">조회수</th>
-											</tr>
-										</thead>
-										<tbody>
-		
-							<c:forEach var="postDAO" items="${list}">
-										<tr>
-											<td><a href='#' onClick="location.href='/multichat/post/postCheck?title=${postDAO.title}'">${postDAO.title}</a> </td> 
-											<%-- <td>${postDAO.content} </td> --%>
-											<td>${postDAO.registDate} </td>
-											<td>${postDAO.views} </td>
-										</tr>
-							</c:forEach>
-						</tbody>
-					
-									</table>
+							<div class="row">
+								<div class="col-lg-7 col-xl-8 stretch-card">
+									<div class="table-responsive">
+										<table class="table table-hover mb-0"
+											style="margin-left: auto; margin-right: auto;">
+											<thead>
+												<tr>
+													<th style="height: 20px">게시글 제목</th>
+													<!-- <th style="height: 20px">공지 내용</th> -->
+													<th style="height: 20px">생성일</th>
+													<th style="height: 20px">조회수</th>
+												</tr>
+											</thead>
+											<tbody>
+
+												<c:forEach var="postDAO" items="${list}">
+													<tr>
+														<td><a href='#'
+															onClick="location.href='/multichat/post/postCheck?title=${postDAO.title}'">${postDAO.title}</a>
+														</td>
+														<%-- <td>${postDAO.content} </td> --%>
+														<td>${postDAO.registDate}</td>
+														<td>${postDAO.views}</td>
+													</tr>
+												</c:forEach>
+											</tbody>
+										</table>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-			</div>
+			</nav>
 		</div>
 	</div>
 	<script src="../assets/vendors/core/core.js"></script>

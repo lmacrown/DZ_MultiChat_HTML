@@ -79,7 +79,36 @@ public class PostDAO {
 		}
 		return list;
 	}
-
+	public List<PostBean> searchPost(String title) {
+		List<PostBean> list = new ArrayList<>();
+		try {
+			// connDB();
+			conn = dataFactory.getConnection();
+			String query = "select * from t_board where title like ?";
+			System.out.println("prepareStatememt: " + query);
+			pstmt = conn.prepareStatement(query);
+			pstmt.setString(1, "%"+title+"%");
+			ResultSet rs = pstmt.executeQuery();
+			
+			System.out.println("게시글 확인");
+			while (rs.next()) {
+				PostBean post = new PostBean(
+						rs.getString("title"),		
+						rs.getString("registDate"),	
+						rs.getInt("views"));	
+				list.add(post);
+			}
+			rs.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				pstmt.close();
+				conn.close();
+			} catch (Exception e) {}
+		}
+		return list;		
+	}
 	/*
 	 * public String checkNotice(String title) { try { // connDB(); conn =
 	 * dataFactory.getConnection(); String query =
@@ -119,63 +148,6 @@ public class PostDAO {
 			e.printStackTrace();
 		}
 	}
-	public void updateMember(MemberBean member) {
-		try {
-			System.out.println("회원정보 수정");
-			Connection con = dataFactory.getConnection();
-			String query = "update t_member set pwd=?, name=?,email=? where id=?";
-			System.out.println("prepareStatememt: " + query);
-			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, member.getPwd());
-			pstmt.setString(2, member.getName());
-			pstmt.setString(3, member.getEmail());
-			pstmt.setString(4, member.getId());
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	public void deleteMember(String uid) {
-		try {
-			Connection con = dataFactory.getConnection();
-			String query = "delete from t_member where id=?";
-			System.out.println("prepareStatememt: " + query);
-			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, uid);
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	public void restCheck(String uid) {
-		try {
-			Connection con = dataFactory.getConnection();
-			String query = "update t_member set use_yn='N' where id=?";
-			System.out.println("prepareStatememt: " + query);
-			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, uid);
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	public void restUncheck(String uid) {
-		try {
-			Connection con = dataFactory.getConnection();
-			String query = "update t_member set use_yn='Y' where id=?";
-			System.out.println("prepareStatememt: " + query);
-			pstmt = con.prepareStatement(query);
-			pstmt.setString(1, uid);
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	public PostBean checkNotice(String title) {
 		try {
 			// connDB();
@@ -237,6 +209,9 @@ public class PostDAO {
 		}
 		return null;		
 	}
+	
+
+			
 	/*
 	 * public int insertMember(MemberBean memberBean) throws SQLException{ try { //
 	 * connDB(); conn = dataFactory.getConnection(); String query =

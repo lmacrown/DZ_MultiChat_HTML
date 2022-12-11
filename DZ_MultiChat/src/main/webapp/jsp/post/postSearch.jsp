@@ -1,6 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@page import="multichat.*"%>
 <%@page import="java.util.List"%>
+<%@page import="org.json.JSONObject"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -9,13 +10,35 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="../assets/css/demo_1/style.css">
 <link rel="shortcut icon" href="../assets/images/favicon.png" />
-<title>DZ_MultiChat 게시글 작성</title>
+<title>DZ_MultiChat 게시글</title>
+<style>
+table, th, td, tr {
+	border: 1px solid #222; /* 표 테두리 */
+	border-collapse: collapse; /* 테두리 1줄만 표시 */
+}
+
+table {
+	margin-left: auto;
+	margin-right: auto;
+}
+
+tr {
+	text-align: center;
+}
+</style>
 </head>
 <body class="sidebar-dark">
+	<%
+	PostDAO postDAO = new PostDAO();
+	String title=request.getParameter("title");
+
+	List<PostBean> list = postDAO.searchPost(title);
+	request.setAttribute("list", list);
+	%>
 	<div class="main-wrapper">
 		<nav class="sidebar">
 			<div class="sidebar-header">
-				<a class="sidebar-brand"> DZ<span>CHAT</span>
+				<a href="#" class="sidebar-brand"> DZ<span>CHAT</span>
 				</a>
 				<div class="sidebar-toggler active">
 					<span></span> <span></span> <span></span>
@@ -24,10 +47,9 @@
 			<div class="sidebar-body">
 				<ul class="nav">
 
-					<li class="nav-item"><a
-						href="/multichat/jsp/home.jsp" class="nav-link">
-							<i class="link-icon" data-feather="box"></i> <span
-							class="link-title">홈</span>
+					<li class="nav-item"><a href="/multichat/jsp/home.jsp"
+						class="nav-link"> <i class="link-icon" data-feather="box"></i>
+							<span class="link-title">홈${title}</span>
 					</a></li>
 
 					<li class="nav-item nav-category">게시글</li>
@@ -74,7 +96,7 @@
 								</div>
 								<div class="dropdown-body">
 									<ul class="profile-nav p-0 pt-3">
-									<li class="nav-item"><a
+										<li class="nav-item"><a
 											href="/multichat/member/view"
 											class="nav-link"> <i data-feather="user"></i> <span>Profile</span>
 										</a></li>
@@ -93,73 +115,86 @@
 							</div></li>
 					</ul>
 				</div>
-				<div class="col-md-12 grid-margin stretch-card">
-					<div class="card">
-						<div class="card-body">
-							<div class="px-4 py-5" style="width: 100%">
-								<h6 class="card-title">게시글 작성</h6>
-								<form style="width: 90%; margin-left: 10px">
-									<div class="form-group">
-										<label for="title">Title</label> <input type="text"
-											oninput="btn_status()" class="form-control" id="title"
-											placeholder="Title" name="title">
-									</div>
-									<div>
-										<label for="content">Content</label> <input type="text"
-											oninput="btn_status()" class="form-control"
-											style="height: 450px;" id="content" name="content">
-									</div>
-									<div class="form-group">
-										<label>Image upload</label> <input type="file"
-											name="postImage" id="exampleImage1"
-											class="file-upload-default">
-										<div class="input-group col-xs-12">
-											<input type="text" class="form-control file-upload-info"
-												id="exampleInputImage1" disabled=''
-												placeholder="Upload Image"> <span
-												class="input-group-append">
-												<button class="file-upload-browse btn btn-primary"
-													type="button">Upload</button>
-											</span>
-										</div>
-									</div>
-									<div class="row1">
-										<div style="width: 150px;">
+				<a href="#" class="sidebar-toggler"> <i data-feather="menu"></i>
+				</a>
+				<div class="navbar-content">
 
-											<button class="btn btn-primary" id="postAdd">등록</button>
-											<!-- disabled=""disabled" -->
-											<a href="post.jsp"
-												class="btn btn-primary text-white mr-2 mb-2 mb-md-0">취소</a>
-										</div>
+					<div class="page-content">
+						<div class="card">
+							<div
+								class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
+								<div>
+									<h4 class="mb-3 mb-md-0"
+										style="margin-left: auto; margin-right: auto; margin-top: 10px; text-align: center;">게시글
+										목록</h4>
+								</div>
+								<div class="d-flex align-items-center flex-wrap text-nowrap">
+									<button type="button" id="createChat" style="margin-top: 10px;"
+										onclick="location.href='postCreate.jsp'"
+										class="btn btn-outline-info btn-icon-text mr-2 d-none d-md-block">
+										<i class="btn-icon-prepend" data-feather="download"></i> 게시글
+										생성
+									</button>
+								</div>
+							</div>
+							<form action="/multichat/jsp/post/postSearch.jsp" method="post">
+								<div style="margin-bottom: 20px">
+									검색 : <input type="text" id="title" name="title"> <button
+										type="submit" value="검색" id="searchTitle">검색</button>
+								</div>
+							</form>
+
+							<div class="row">
+								<div class="col-lg-7 col-xl-8 stretch-card">
+									<div class="table-responsive">
+										<table class="table table-hover mb-0"
+											style="margin-left: auto; margin-right: auto;">
+											<thead>
+												<tr>
+													<th style="height: 20px">게시글 제목</th>
+													<!-- <th style="height: 20px">공지 내용</th> -->
+													<th style="height: 20px">생성일</th>
+													<th style="height: 20px">조회수</th>
+												</tr>
+											</thead>
+											<tbody>
+
+												<c:forEach var="postDAO" items="${list}">
+													<tr>
+														<td><a href='#'
+															onClick="location.href='/multichat/post/postCheck?title=${postDAO.title}'">${postDAO.title}</a>
+														</td>
+														<%-- <td>${postDAO.content} </td> --%>
+														<td>${postDAO.registDate}</td>
+														<td>${postDAO.views}</td>
+													</tr>
+												</c:forEach>
+											</tbody>
+										</table>
 									</div>
-								</form>
+								</div>
 							</div>
 						</div>
 					</div>
-					
 				</div>
 			</nav>
 		</div>
 	</div>
 	<script type="text/javascript">
-	let postAddButton = document.querySelector("#postAdd");
-	postAddButton.onclick = () => {
-		postAdd();
+	let searchButton = document.querySelector("#searchTitle");
+	searchButton.onclick = () => {
+		searchTitle();
 	}
-	async function postAdd() {
-		let response = await fetch('/multichat/post/addPost?title=' + title.value
-				+'&content='+content.value);
+	async function searchTitle() {
+		let response = await fetch('/multichat/post/searchPost?title=' + title.value);
 
 		let jsonResult = await response.json();
 
-		if (jsonResult.status == false) {
-			alert(jsonResult.message);
-		}else{
-			alert(jsonResult.message);
+		if (jsonResult.status == "search") {
 			location.href = jsonResult.url;
 		}
 	}
-    </script>
+	</script>
 	<script src="../assets/vendors/core/core.js"></script>
 
 	<script src="../assets/vendors/chartjs/Chart.min.js"></script>
@@ -177,5 +212,6 @@
 	<!-- custom js for this page -->
 	<script src="../assets/js/dashboard.js"></script>
 	<script src="../assets/js/datepicker.js"></script>
+	<!-- end custom js for this page -->
 </body>
 </html>

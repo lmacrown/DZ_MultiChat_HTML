@@ -169,6 +169,7 @@ public class MemberDAO {
 			String query = "select * from t_member where id = ?";
 			System.out.println("prepareStatememt: " + query);
 			pstmt = conn.prepareStatement(query);
+			System.out.println(id);
 			pstmt.setString(1, id);
 			ResultSet rs = pstmt.executeQuery();
 			MemberBean memberBean = null;

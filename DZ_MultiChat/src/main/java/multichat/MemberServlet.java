@@ -192,7 +192,23 @@ public class MemberServlet extends HttpServlet {
 			out.println(jsonResult.toString());
 		} 
 		//회원 삭제
-		else if (request.getRequestURI().equals("/multichat/member/delete")) {
+				else if (request.getRequestURI().equals("/multichat/member/delete")) {
+					String id=(String)request.getSession().getAttribute("uid");
+					System.out.println(id);
+					MemberDAO memberDAO = new MemberDAO();
+					memberDAO.deleteMember(id);
+					JSONObject jsonResult = new JSONObject();
+
+					System.out.println("삭제성공");
+					jsonResult.put("status", true);
+					jsonResult.put("message", "삭제되었습니다");
+					jsonResult.put("url", "/multichat/jsp/login.jsp");
+
+					PrintWriter out = response.getWriter();
+					out.println(jsonResult.toString());
+		} 
+		//관리자 회원 삭제
+		else if (request.getRequestURI().equals("/multichat/member/admindelete")) {
 			String uid = request.getParameter("id");
 			System.out.println(uid);
 			MemberDAO memberDAO = new MemberDAO();
@@ -231,11 +247,11 @@ public class MemberServlet extends HttpServlet {
 		//멤버 확인
 		else if (request.getRequestURI().equals("/multichat/member/view")) {
 			
-			String id = request.getParameter("id");
+			String id=(String)request.getSession().getAttribute("uid");
 			MemberDAO memberDAO = new MemberDAO();
 			MemberBean memberBean = memberDAO.viewMember(id);
 			request.setAttribute("memberBean", memberBean);
-			RequestDispatcher dispatch = request.getRequestDispatcher("/jsp/member/view.jsp");
+			RequestDispatcher dispatch = request.getRequestDispatcher("/jsp/member/memberView.jsp");
 			dispatch.forward(request, response);
 		} else if (request.getRequestURI().equals("/multichat/member/list")) {
 			MemberDAO memberDAO = new MemberDAO();

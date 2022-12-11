@@ -10,24 +10,23 @@
 <link rel="stylesheet" href="/multichat/jsp/assets/css/demo_1/style.css">
 <link rel="shortcut icon"
 	href="/multichat/jsp/assets/images/favicon.png" />
-<title>DZ_MultiChat 공지사항</title>
+<title>DZ_MultiChat 회원정보</title>
 <style>
-table, th, td, tr {
-	border: 1px solid #222; /* 표 테두리 */
-	border-collapse: collapse; /* 테두리 1줄만 표시 */
+#container {
+	width: 600px;
+	margin: 10px auto;
 }
 
-table {
-	margin-left: auto;
-	margin-right: auto;
-}
-
-tr {
-	text-align: center;
+label {
+	padding-right: 75px;
 }
 </style>
 </head>
 <body class="sidebar-dark">
+	<%
+	MemberBean memberBean = (MemberBean) request.getAttribute("memberBean");
+	request.setAttribute("memberBean", memberBean);
+	%>
 	<div class="main-wrapper">
 		<nav class="sidebar">
 			<div class="sidebar-header">
@@ -40,10 +39,9 @@ tr {
 			<div class="sidebar-body">
 				<ul class="nav">
 
-					<li class="nav-item"><a
-						href="/multichat/jsp/home.jsp" class="nav-link">
-							<i class="link-icon" data-feather="box"></i> <span
-							class="link-title">홈</span>
+					<li class="nav-item"><a href="/multichat/jsp/home.jsp"
+						class="nav-link"> <i class="link-icon" data-feather="box"></i>
+							<span class="link-title">홈</span>
 					</a></li>
 
 					<li class="nav-item nav-category">게시글</li>
@@ -99,54 +97,64 @@ tr {
 											class="nav-link"> <i data-feather="edit"></i> <span>Edit
 													Profile</span>
 										</a></li>
-										<li class="nav-item">
-										<a class="nav-link" href="/multichat/jsp/login.jsp"> 
-										<i data-feather="log-out"></i> 
-										<span>LogOut</span>
+										<li class="nav-item"><a class="nav-link"
+											href="../login.jsp"> <i data-feather="log-out"></i> <span>LogOut</span>
 										</a></li>
 									</ul>
 								</div>
 							</div></li>
 					</ul>
 				</div>
-				<div class="col-md-12 grid-margin stretch-card">
-					<div class="card">
-						<div class="card-body">
-							<div class="px-4 py-5" style="width: 100%">
-								<h3 class="card-title" style="margin-left: 10px">${notice.title}</h3>
-								<form style="width: 90%; margin-left: 10px">
-									<div class="form-group">
-										<label>${notice.id}</label> <label>${notice.registDate }</label>
-									</div>
-									<div>
-										<label for="content">Content</label>
-									</div>
-									<div>
-										<label for="contents"
-											style="width: 90%; min-height: 450px; border: 1px solid;">${notice.content}</label>
-										<!-- 	<input type="text"
-										oninput="btn_status()" class="form-control"
-										style="height: 450px;" id="content" name="content"> -->
-									</div>
-									<div class="row1">
-										<div style="width: 300px; justify-content: space-between;">
+				<div
+					style="border: 1px solid; text-align: center; width: 600px; margin-left: auto; margin-right: auto;">
+					<h1 style="text-align: center; margin-top: 40px;">회원 정보</h1>
+					<form style="width: 400px; margin-left: 30%">
+						<fieldset>
+							<ul>
+								<li><label for="uid" id="uid" style="margin-left: -50%;">아이디</label> ${uid}</li>
+								<li><label for="pwd" id="pwd" style="margin-left: -57%; margin-right: -11px">비밀번호</label>${memberBean.pwd}</li>
+								<li><label for="nickname" style="margin-left: -57%;">닉네임</label> ${memberBean.name}</li>
+								<li><label for="email" style="margin-left: -36%;">이메일</label> ${memberBean.email}</li>
+							</ul>
 
-											<a href="postfix.jsp"
-												class="btn btn-primary text-white mr-2 mb-2 mb-md-0">수정</a>
-											<!-- disabled=""disabled" -->
+							<input type="button" value="수정하기" onclick="location.href='/multichat/jsp/member/memberUpdate.jsp'" > 
+							<input type="submit" value="탈퇴하기" id="deleteButton">
+							<button type="button"
+								onClick="location.href='/multichat/jsp/home.jsp'">취소</button>
 
-											<a href="/multichat/jsp/post/notice.jsp"
-												class="btn btn-primary text-white mr-2 mb-2 mb-md-0">뒤로가기</a>
-										</div>
-									</div>
-								</form>
-							</div>
-						</div>
-					</div>
+						</fieldset>
+					</form>
 				</div>
 			</nav>
+
 		</div>
 	</div>
+	<script type="text/javascript">
+    
+   
+    let deleteButton = document.querySelector("#deleteButton");
+    deleteButton.onclick = () => {
+    	delete1();
+    } 
+
+    
+   
+	function delete1(){
+		 if (confirm("정말 삭제하시겠습니까?") == true){
+			 fetch('/multichat/member/delete')
+				.then(response => response.json())
+				.then(jsonResult => {
+					alert(jsonResult.message);
+					if (jsonResult.status == true) {
+						//성공시 이동할 페이지로 이동한다  
+						location.href = jsonResult.url;
+					}
+				});
+		 }else{
+		     return false;
+		 }
+    }
+    </script>
 	<script src="/multichat/jsp/assets/vendors/core/core.js"></script>
 
 	<script src="/multichat/jsp/assets/vendors/chartjs/Chart.min.js"></script>
