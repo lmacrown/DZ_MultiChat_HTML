@@ -68,8 +68,7 @@
 										<img src="https://via.placeholder.com/80x80" alt="">
 									</div>
 									<div class="info text-center">
-										<p class="name font-weight-bold mb-0">Amiah Burton</p>
-										<p class="email text-muted mb-3">amiahburton@gmail.com</p>
+										<p class="name font-weight-bold mb-0">${uid}</p>
 									</div>
 								</div>
 								<div class="dropdown-body">
@@ -107,7 +106,7 @@
 									<div>
 										<label for="content">Content</label> <input type="text"
 											oninput="btn_status()" class="form-control"
-											style="height: 450px;" id="content" name="content">
+											style="height: 300px;" id="content" name="content">
 									</div>
 									<div class="form-group">
 										<label>Image upload</label> <input type="file"

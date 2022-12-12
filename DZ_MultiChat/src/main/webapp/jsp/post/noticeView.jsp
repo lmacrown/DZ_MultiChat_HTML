@@ -84,8 +84,7 @@ tr {
 										<img src="https://via.placeholder.com/80x80" alt="">
 									</div>
 									<div class="info text-center">
-										<p class="name font-weight-bold mb-0">Amiah Burton</p>
-										<p class="email text-muted mb-3">amiahburton@gmail.com</p>
+										<p class="name font-weight-bold mb-0">${uid}</p>
 									</div>
 								</div>
 								<div class="dropdown-body">
@@ -130,10 +129,6 @@ tr {
 									</div>
 									<div class="row1">
 										<div style="width: 300px; justify-content: space-between;">
-
-											<a href="postfix.jsp"
-												class="btn btn-primary text-white mr-2 mb-2 mb-md-0">수정</a>
-											<!-- disabled=""disabled" -->
 
 											<a href="/multichat/jsp/post/notice.jsp"
 												class="btn btn-primary text-white mr-2 mb-2 mb-md-0">뒤로가기</a>

@@ -84,10 +84,10 @@ public class PostDAO {
 		try {
 			// connDB();
 			conn = dataFactory.getConnection();
-			String query = "select * from t_board where title like ?";
+			String query = "select * from t_board where title like  concat('%', ?, '%')";
 			System.out.println("prepareStatememt: " + query);
 			pstmt = conn.prepareStatement(query);
-			pstmt.setString(1, "%"+title+"%");
+			pstmt.setString(1, title);
 			ResultSet rs = pstmt.executeQuery();
 			
 			System.out.println("게시글 확인");
@@ -109,32 +109,44 @@ public class PostDAO {
 		}
 		return list;		
 	}
-	/*
-	 * public String checkNotice(String title) { try { // connDB(); conn =
-	 * dataFactory.getConnection(); String query =
-	 * "select * from notice where title=?"; System.out.println("prepareStatememt: "
-	 * + query); pstmt = conn.prepareStatement(query); pstmt.setString(1, title);
-	 * ResultSet rs = pstmt.executeQuery(); if (rs.next()) return
-	 * rs.getString("content"); else return null; } catch (Exception e) {
-	 * e.printStackTrace(); } return null; }
-	 */
-	/*
-	 * public PostBean checkNotice(String title) {
-	 * 
-	 * try { // connDB(); //생성일, 작성자, 내용 conn = dataFactory.getConnection(); String
-	 * query = "select * from notice where title=?";
-	 * System.out.println("prepareStatememt: " + query); pstmt =
-	 * conn.prepareStatement(query); pstmt.setString(1, title); ResultSet rs =
-	 * pstmt.executeQuery(); System.out.println("checking"); if (rs.next()) {
-	 * PostBean post = new PostBean( rs.getString("title"), rs.getString("content"),
-	 * rs.getString("registDate"), rs.getInt("views")); System.out.println(post);
-	 * return post; } rs.close(); pstmt.close(); conn.close(); } catch (Exception e)
-	 * { e.printStackTrace(); } return null; }
-	 */
+
 	public void addPost(PostBean postBean) {
 		try {
 			Connection con = dataFactory.getConnection();
 			String query = "insert into t_board (title, content, registDate, id)";
+			query += " values (?,?,?,?)";
+			System.out.println("prepareStatememt: " + query);
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, postBean.getTitle());
+			pstmt.setString(2, postBean.getContent());
+			pstmt.setString(3, postBean.getRegistDate());
+			pstmt.setString(4, postBean.getId());
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void fixPost(PostBean postBean) {
+		try {
+			Connection con = dataFactory.getConnection();
+			String query = "update t_board set content=?, registDate=?, id=? where title=?";
+			System.out.println("prepareStatememt: " + query);
+			pstmt = con.prepareStatement(query);
+			pstmt.setString(1, postBean.getTitle());
+			pstmt.setString(2, postBean.getContent());
+			pstmt.setString(3, postBean.getRegistDate());
+			pstmt.setString(4, postBean.getId());
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void addQnA(PostBean postBean) {
+		try {
+			Connection con = dataFactory.getConnection();
+			String query = "insert into qna (title, content, registDate, id)";
 			query += " values (?,?,?,?)";
 			System.out.println("prepareStatememt: " + query);
 			pstmt = con.prepareStatement(query);

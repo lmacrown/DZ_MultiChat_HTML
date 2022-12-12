@@ -13,6 +13,8 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import org.json.JSONObject;
+
 
 public class ChattingDAO {
 	Connection conn;
@@ -32,7 +34,6 @@ public class ChattingDAO {
 	public List<ChattingBean> listChatting() {
 		List<ChattingBean> list = new ArrayList<>();
 		try {
-			// connDB();
 			conn = dataFactory.getConnection();
 			String query = "select * from chattingroom ";
 			System.out.println("prepareStatememt: " + query);
@@ -45,6 +46,7 @@ public class ChattingDAO {
 						rs.getInt("users"));
 				System.out.println(Chatting);
 				list.add(Chatting);
+				
 			}
 			rs.close();
 			pstmt.close();
@@ -57,14 +59,14 @@ public class ChattingDAO {
 	public void dupUser(String title, String id) {
 		try {
 			Connection con = dataFactory.getConnection();
-			String query = "select * from ? where id=?";
+			String query = "select * from chat where  title=? and id=?";
 			System.out.println("prepareStatememt: " + query);
 			pstmt = con.prepareStatement(query);
 
 			pstmt.setString(1, title);
 			pstmt.setString(2, id);
-			ResultSet rs=pstmt.executeQuery();
-			if(rs.next())
+			ResultSet rs = pstmt.executeQuery();
+			if(!rs.next())
 				EnterChatRoom(title, id);
 			pstmt.close();
 		} catch (Exception e) {
@@ -101,6 +103,20 @@ public class ChattingDAO {
 			e.printStackTrace();
 		}
 	}
+	public void CreateRoom(String title) {
+		try {
+			Connection con = dataFactory.getConnection();
+			String query = "insert into chattingroom(title) values (?)";
+			System.out.println("prepareStatememt: " + query);
+			pstmt = con.prepareStatement(query);
+
+			pstmt.setString(1, title);
+			pstmt.executeQuery();
+			pstmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public List<ChattingBean> searchChat(String title) {
 		List<ChattingBean> list = new ArrayList<>();
 		try {
@@ -112,14 +128,19 @@ public class ChattingDAO {
 			pstmt.setString(1, title);
 			ResultSet rs = pstmt.executeQuery();
 			
-			System.out.println("유저 확인");
+			System.out.println("유저 확인!");
 			while (rs.next()) {
 				ChattingBean chat = new ChattingBean(
 						rs.getString("id"));
 				list.add(chat);
 				
 			}
+			
+			JSONObject jsonResult = new JSONObject();
+			jsonResult.put("title", "s");
 			ChatMap.put(title,list);
+			jsonResult.put("Map", ChatMap);
+			System.out.println(ChatMap.get(title)+"DAO챗");
 			rs.close();
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -80,14 +80,12 @@
 										<img src="https://via.placeholder.com/80x80" alt="">
 									</div>
 									<div class="info text-center">
-										<p class="name font-weight-bold mb-0">Amiah Burton</p>
-										<p class="email text-muted mb-3">amiahburton@gmail.com</p>
+										<p class="name font-weight-bold mb-0">${uid}</p>
 									</div>
 								</div>
 								<div class="dropdown-body">
 									<ul class="profile-nav p-0 pt-3">
-										<li class="nav-item"><a
-											href="/multichat/member/view"
+										<li class="nav-item"><a href="/multichat/member/view"
 											class="nav-link"> <i data-feather="user"></i> <span>Profile</span>
 										</a></li>
 										<li class="nav-item"><a
@@ -96,8 +94,7 @@
 													Profile</span>
 										</a></li>
 
-										<li class="nav-item">
-										<a class="nav-link" href="login.jsp"
+										<li class="nav-item"><a class="nav-link" href="login.jsp"
 											class="nav-link"> <i data-feather="log-out"></i> <span>Log
 													Out</span>
 										</a></li>
@@ -111,19 +108,24 @@
 				<div class="navbar-content">
 
 					<div class="page-content">
-						<div class="card" style="width: 50%">
-							<div
+						<div class="card" style="width: 70%">
+							<div style="margin-bottom: 0px"
 								class="d-flex justify-content-between align-items-center flex-wrap grid-margin">
 								<div>
 									<h4 class="mb-3 mb-md-0"
 										style="margin-left: 10px; margin-top: 10px;">채팅방 목록</h4>
 								</div>
+
 								<div class="d-flex align-items-center flex-wrap text-nowrap">
-									<button type="button" id="createChat" style="margin-top: 20%;"
-										class="btn btn-outline-info btn-icon-text mr-2 d-none d-md-block">
-										<i class="btn-icon-prepend" data-feather="message-circle"></i>
-										채팅방 생성
-									</button>
+									<div class="form-group" style="margin-top: 20%">
+										<input type="text" id="title" name="title">
+										<button type="button" id="createChat"
+											style="margin-left: 10%;"
+											class="btn btn-outline-info btn-icon-text mr-2 d-none d-md-block">
+											<i class="btn-icon-prepend" data-feather="message-circle"></i>
+											채팅방 생성
+										</button>
+									</div>
 								</div>
 							</div>
 							<div class="row" style="margin-left: auto; margin-right: auto;">
@@ -139,7 +141,8 @@
 										<tbody>
 											<c:forEach var="chattingDAO" items="${chatList}">
 												<tr>
-													<td style="width: 40%"><a href='#' onclick="location.href='/multichat/chatting/chatroom?title=${chattingDAO.title}'">${chattingDAO.title}</a></td>
+													<td style="width: 40%"><a href='#'
+														onclick="location.href='/multichat/chatting/chatroom?title=${chattingDAO.title}'">${chattingDAO.title}</a></td>
 													<td style="width: 40%">${chattingDAO.createDate}</td>
 													<td style="width: 40%">${chattingDAO.users}</td>
 												</tr>
@@ -154,6 +157,22 @@
 			</nav>
 		</div>
 	</div>
+	<script type="text/javascript">
+	 let createChatBT = document.querySelector("#createChat");
+		 createChatBT.onclick = () => {
+	    	createChat();
+	    } 
+		 async function createChat(){
+	    	let response =  await fetch('/multichat/chatting/insert?title=' + title.value);
+
+	    	let jsonResult =  await response.json();
+
+	    	if (jsonResult.status == true) {
+	    		alert("채팅방 생성완료");
+	    		location.href = jsonResult.url;
+	    	}
+		}
+	</script>
 	<script src="assets/vendors/core/core.js"></script>
 
 	<script src="assets/vendors/chartjs/Chart.min.js"></script>

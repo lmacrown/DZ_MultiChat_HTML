@@ -34,15 +34,16 @@ public class ChattingServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		System.out.println("MemberSevlet============ : " + request.getRequestURI());
-		//채팅방 입장
+		// 채팅방 입장
 		if (request.getRequestURI().equals("/multichat/chatting/chatroom")) {
 			System.out.println("채팅 시작");
 			ChattingDAO chattingDAO = new ChattingDAO();
 
 			String title = request.getParameter("title");
-			String id = (String)request.getSession().getAttribute("uid");
+			String id = (String) request.getSession().getAttribute("uid");
 			request.getSession().setAttribute("title", title);
-			System.out.println(title+" "+id);
+			
+			System.out.println(title + " " + id);
 
 			chattingDAO.dupUser(title, id);
 
@@ -55,17 +56,48 @@ public class ChattingServlet extends HttpServlet {
 			// request.getSession().setAttribute("post", checkPosts);
 			// response.sendRedirect("/multichat/jsp/post/noticeView.jsp");
 		}
-		//채팅방 퇴장
-		else if(request.getRequestURI().equals("/multichat/chatting/exitUser")) {
+		// 채팅방 퇴장
+		else if (request.getRequestURI().equals("/multichat/chatting/exitUser")) {
 			System.out.println("채팅 종료");
 			ChattingDAO chattingDAO = new ChattingDAO();
 
-			String id = (String)request.getSession().getAttribute("uid");
+			String id = (String) request.getSession().getAttribute("uid");
 			JSONObject jsonResult = new JSONObject();
 			chattingDAO.ExitChatRoom(id);
 			jsonResult.put("status", true);
 			jsonResult.put("url", "/multichat/jsp/home.jsp");
 			System.out.println("채팅방 퇴장완료");
+
+			PrintWriter out = response.getWriter();
+			out.println(jsonResult.toString());
+		}
+		// 채팅 입력
+		else if (request.getRequestURI().equals("/multichat/chatting/chat")) {
+			System.out.println("chat");
+			ChattingDAO chattingDAO = new ChattingDAO();
+
+			String id = (String) request.getSession().getAttribute("uid");
+			String title = (String) request.getSession().getAttribute("title");
+			JSONObject jsonResult = new JSONObject();
+			chattingDAO.ExitChatRoom(id);
+			jsonResult.put("status", true);
+			jsonResult.put("url", "/multichat/jsp/home.jsp");
+			System.out.println("채팅방 퇴장완료");
+
+			PrintWriter out = response.getWriter();
+			out.println(jsonResult.toString());
+		}
+		//채팅방 생성
+		else if (request.getRequestURI().equals("/multichat/chatting/insert")) {
+			System.out.println("채팅 생성");
+			ChattingDAO chattingDAO = new ChattingDAO();
+
+			String title = request.getParameter("title");
+			System.out.println(title);
+			JSONObject jsonResult = new JSONObject();
+			chattingDAO.CreateRoom(title);
+			jsonResult.put("status", true);
+			jsonResult.put("url", "/multichat/jsp/home.jsp");
 
 			PrintWriter out = response.getWriter();
 			out.println(jsonResult.toString());

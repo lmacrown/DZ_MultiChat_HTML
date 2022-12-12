@@ -68,7 +68,7 @@ public class PostServlet extends HttpServlet {
 			PostBean checkPosts = PostDAO.checkPost(title);
 
 			System.out.println("포스트 확인 성공");
-			
+
 			request.setAttribute("post", checkPosts);
 
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/post/postView.jsp");
@@ -104,8 +104,66 @@ public class PostServlet extends HttpServlet {
 			out.println(jsonResult.toString());
 
 		}
-		//게시글 검색
-		else if(request.getRequestURI().equals("/multichat/post/searchPost")) {
+		// QnA 작성
+		else if (request.getRequestURI().equals("/multichat/post/addQnA")) {
+			String title = request.getParameter("title");
+			String content = request.getParameter("content");
+			String id = (String) request.getSession().getAttribute("uid");
+			System.out.println(title + " " + content + " " + id);
+
+			SimpleDateFormat now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String nowTime = now.format(System.currentTimeMillis());
+
+			PostDAO postDAO = new PostDAO();
+			JSONObject jsonResult = new JSONObject();
+			try {
+				postDAO.addQnA(new PostBean(title, content, nowTime, id));
+
+				jsonResult.put("status", true);
+				jsonResult.put("url", "/multichat/jsp/post/post.jsp");
+				jsonResult.put("message", "QnA 작성 완료");
+				System.out.println("QnA 성공");
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("QnA 실패");
+				jsonResult.put("status", false);
+				jsonResult.put("message", "QnA 작성 실패 ");
+			}
+			PrintWriter out = response.getWriter();
+			out.println(jsonResult.toString());
+
+		}
+		// 게시글 수정
+		else if (request.getRequestURI().equals("/multichat/post/postFix")) {
+			String title = request.getParameter("title");
+			String content = request.getParameter("content");
+			String id = (String) request.getSession().getAttribute("uid");
+			System.out.println(title + " " + content + " " + id);
+
+			SimpleDateFormat now = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String nowTime = now.format(System.currentTimeMillis());
+
+			PostDAO postDAO = new PostDAO();
+			JSONObject jsonResult = new JSONObject();
+			try {
+				postDAO.fixPost(new PostBean(title, content, nowTime, id));
+
+				jsonResult.put("status", true);
+				jsonResult.put("url", "/multichat/jsp/post/post.jsp");
+				jsonResult.put("message", "게시글 작성 완료");
+				System.out.println("게시글작성 성공");
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("게시글작성 실패");
+				jsonResult.put("status", false);
+				jsonResult.put("message", "게시글 작성 실패 ");
+			}
+			PrintWriter out = response.getWriter();
+			out.println(jsonResult.toString());
+
+		}
+		// 게시글 검색
+		else if (request.getRequestURI().equals("/multichat/post/searchPost")) {
 			System.out.println("공지검색 시작");
 			PostDAO PostDAO = new PostDAO();
 
@@ -119,17 +177,15 @@ public class PostServlet extends HttpServlet {
 			request.setAttribute("title", title);
 			jsonResult.put("url", "/multichat/jsp/post/postSearch.jsp");
 			jsonResult.put("title", title);
-			
+
 			PrintWriter out = response.getWriter();
 			out.println(jsonResult.toString());
 
 //			RequestDispatcher dispatcher = request.getRequestDispatcher("/jsp/post/post.jsp");
 //			dispatcher.forward(request, response);
 //			response.sendRedirect("/jsp/post/post.jsp");
-			
+
 		}
-		
-		
 
 	}
 

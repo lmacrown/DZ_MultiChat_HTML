@@ -59,9 +59,9 @@ tr {
 						href="/multichat/jsp/post/QnA.jsp"> <i class="link-icon"
 							data-feather="inbox"></i> <span class="link-title">QnA</span>
 					</a></li>
-
 					<li class="nav-item"><a class="nav-link" href="../login.jsp">
-							<i data-feather="log-out"></i> <span>LogOut</span>
+							<i class="link-icon" data-feather="log-out"></i> <span
+							class="link-title">로그아웃</span>
 					</a></li>
 				</ul>
 			</div>
@@ -83,8 +83,7 @@ tr {
 										<img src="https://via.placeholder.com/80x80" alt="">
 									</div>
 									<div class="info text-center">
-										<p class="name font-weight-bold mb-0">Amiah Burton</p>
-										<p class="email text-muted mb-3">amiahburton@gmail.com</p>
+										<p class="name font-weight-bold mb-0">${uid}</p>
 									</div>
 								</div>
 								<div class="dropdown-body">
@@ -132,7 +131,7 @@ tr {
 									<div class="row1">
 										<div style="width: 300px; justify-content: space-between;">
 											<c:if test="${uid eq post.id}">
-												<a href="postfix.jsp"
+												<a href="postFix.jsp"
 													class="btn btn-primary text-white mr-2 mb-2 mb-md-0">수정</a>
 												<!-- disabled=""disabled" -->
 											</c:if>

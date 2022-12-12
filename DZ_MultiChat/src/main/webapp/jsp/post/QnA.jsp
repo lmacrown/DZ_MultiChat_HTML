@@ -10,6 +10,21 @@
 <link rel="stylesheet" href="../assets/css/demo_1/style.css">
 <link rel="shortcut icon" href="../assets/images/favicon.png" />
 <title>QnA</title>
+<style type="text/css">
+
+/* 넓이 높이 조절 */
+.ck.ck-editor {
+	max-width: 1000px;
+}
+
+.ck-editor__editable {
+	min-height: 300px;
+}
+</style>
+<script
+	src="https://cdn.ckeditor.com/ckeditor5/35.3.2/classic/ckeditor.js"></script>
+<script
+	src="https://cdn.ckeditor.com/ckeditor5/35.3.2/classic/translations/ko.js"></script>
 </head>
 <body class="sidebar-dark">
 	<div class="main-wrapper">
@@ -24,10 +39,9 @@
 			<div class="sidebar-body">
 				<ul class="nav">
 
-					<li class="nav-item"><a
-						href="/multichat/jsp/home.jsp" class="nav-link">
-							<i class="link-icon" data-feather="box"></i> <span
-							class="link-title">홈</span>
+					<li class="nav-item"><a href="/multichat/jsp/home.jsp"
+						class="nav-link"> <i class="link-icon" data-feather="box"></i>
+							<span class="link-title">홈</span>
 					</a></li>
 
 					<li class="nav-item nav-category">게시글</li>
@@ -44,11 +58,10 @@
 						href="/multichat/jsp/post/QnA.jsp"> <i class="link-icon"
 							data-feather="inbox"></i> <span class="link-title">QnA</span>
 					</a></li>
-										<li class="nav-item">
-										<a class="nav-link" href="../login.jsp"> 
-										<i data-feather="log-out"></i> 
-										<span>LogOut</span>
-										</a></li>
+					<li class="nav-item"><a class="nav-link" href="login.jsp">
+							<i class="link-icon" data-feather="log-out"></i> <span
+							class="link-title">로그아웃</span>
+					</a></li>
 				</ul>
 			</div>
 		</nav>
@@ -69,14 +82,12 @@
 										<img src="https://via.placeholder.com/80x80" alt="">
 									</div>
 									<div class="info text-center">
-										<p class="name font-weight-bold mb-0">Amiah Burton</p>
-										<p class="email text-muted mb-3">amiahburton@gmail.com</p>
+										<p class="name font-weight-bold mb-0">${uid}</p>
 									</div>
 								</div>
 								<div class="dropdown-body">
 									<ul class="profile-nav p-0 pt-3">
-										<li class="nav-item"><a
-											href="/multichat/member/view"
+										<li class="nav-item"><a href="/multichat/member/view"
 											class="nav-link"> <i data-feather="user"></i> <span>Profile</span>
 										</a></li>
 										<li class="nav-item"><a
@@ -84,10 +95,8 @@
 											class="nav-link"> <i data-feather="edit"></i> <span>Edit
 													Profile</span>
 										</a></li>
-										<li class="nav-item">
-										<a class="nav-link" href="../login.jsp"> 
-										<i data-feather="log-out"></i> 
-										<span>LogOut</span>
+										<li class="nav-item"><a class="nav-link"
+											href="../login.jsp"> <i data-feather="log-out"></i> <span>LogOut</span>
 										</a></li>
 									</ul>
 								</div>
@@ -105,11 +114,14 @@
 											oninput="btn_status()" class="form-control" id="title"
 											placeholder="Title" name="title">
 									</div>
-									<div>
-										<label for="content">Content</label> <input type="text"
-											oninput="btn_status()" class="form-control"
-											style="height: 450px;" id="content" name="content">
+									<div class="form-group">
+										<label for="content">Content</label>
+<!-- 										<textarea class="form-control"
+											style="height: 450px;" id="contents" name="C"></textarea> -->
+							 			<input type="text" style="height: 300px" oninput="btn_status()" class="form-control"
+											id="contents" placeholder="contents" name="contents">
 									</div>
+
 									<div class="form-group">
 										<label>Image upload</label> <input type="file"
 											name="postImage" id="exampleImage1"
@@ -127,13 +139,14 @@
 									<div class="row1">
 										<div style="width: 150px;">
 
-											<button class="btn btn-primary" id="postAdd">등록</button>
-											<!-- disabled=""disabled" -->
+											<button class="btn btn-primary" id="AddQnA">등록</button>
 											<a href="post.jsp"
 												class="btn btn-primary text-white mr-2 mb-2 mb-md-0">취소</a>
 										</div>
 									</div>
 								</form>
+
+
 							</div>
 						</div>
 					</div>
@@ -142,25 +155,28 @@
 		</div>
 	</div>
 	<script>
-	let postAddButton = document.querySelector("#postAdd");
-	postAddButton.onclick = () => {
-		postAdd();
-	}
-	async function postAdd() {
-		let response = await fetch('/multichat/post/addPost?title=' + title.value
-				+'&content='+content.value);
 
-		let jsonResult = await response.json();
+	
 
-		if (jsonResult.status == false) {
-			alert("아이디 또는 비밀번호가 다릅니다");
-		}else if(jsonResult.status == "invalid"){
-			alert("휴면 계정입니다");
-		}else{
-			location.href = jsonResult.url;
-			alert("로그인 성공");
-		}
-	}
+    	let AddQnAButton = document.querySelector("#AddQnA");
+    	AddQnAButton.onclick = () => {
+    		AddQnA();
+    	}
+    	
+        async function AddQnA() {
+
+    		let response = await fetch('/multichat/post/addQnA?title=' + title.value
+    				+ '&content=' + contents.value);
+
+    		let jsonResult = await response.json();
+
+    		if (jsonResult.status == false) {
+    			alert(jsonResult.message);
+    		}else{
+    			alert(jsonResult.message);
+    			location.href = jsonResult.url;
+    		}
+    	}
     </script>
 	<script src="../assets/vendors/core/core.js"></script>
 

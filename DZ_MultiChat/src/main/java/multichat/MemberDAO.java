@@ -90,7 +90,7 @@ public class MemberDAO {
 	public void addMember(MemberBean member) {
 		try {
 			Connection con = dataFactory.getConnection();
-			String query = "insert into t_member";
+			String query = "insert into t_member(id,pwd,name,email, joinDate)";
 			query += " values(?,?,?,?,?)";
 			System.out.println("prepareStatememt: " + query);
 			pstmt = con.prepareStatement(query);
@@ -196,19 +196,6 @@ public class MemberDAO {
 		}
 		return null;		
 	}
-
-	/*
-	 * public int insertMember(MemberBean memberBean) throws SQLException{ try { //
-	 * connDB(); conn = dataFactory.getConnection(); String query =
-	 * "insert into t_member (id, pwd, name, email) values (?,?,?,?)";
-	 * System.out.println("prepareStatememt: " + query); pstmt =
-	 * conn.prepareStatement(query); pstmt.setString(1, memberBean.getId());
-	 * pstmt.setString(2, memberBean.getPwd()); pstmt.setString(3,
-	 * memberBean.getName()); pstmt.setString(4, memberBean.getEmail()); return
-	 * pstmt.executeUpdate(); // } catch (SQLException e) { // e.printStackTrace();
-	 * // throw e; //해당 함수를 호출한 부분으로 예외를 던진다 } finally { try { pstmt.close();
-	 * conn.close(); } catch (Exception e) {} } }
-	 */
 	
 	public String findUserId(String email) {
 		try {
