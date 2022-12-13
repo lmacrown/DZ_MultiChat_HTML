@@ -1,0 +1,53 @@
+리뷰
+1. 암호화
+DB에 저장시 암호화(단방향) 하여 저장
+단방향 : (key+passwd) -> 암호화된 문자열. 암호화된 문자열+key !-> passwd
+양방향 : (key+passwd) -> 암호화된 문자열. 암호화된 문자열+key->passwd
+2. 웹서버, 클라이언트, 데이터 서버 생명주기
+클라이언트(데이터 호출-URL)-->웹서버(정적인 문서-아파치)/WAS(동적인 문서-Tomcat)-->DB
+JSP : Servlet의 데이터 요청 후 웹페이지에 구현하는 게 어려워서 만듬
+JSP파일이 처리와 출력 두 가지 일을 함
+sevletContext-전역변수
+session-멤버변수
+-지역변수
+WAS 안에 Request,Response 객체가 있어 데이터를 요청,처리함
+Request : parameter, cookie, session, header
+Response : out, cookie(받은 값 그대로 보냄)
+서버의 URL 호출방법
+1. get(key,value)/post(form)
+2. JavaScript-ajax(fetch())
+차이점 
+1번은 서버에서 실행 후 응답이 오면 브라우저의 화면 변경(브라우저의 주소 변경) 
+2번은 서버에서 실행 후 응답은 JSON(보통)으로 전달되며 화면 변경없음(브라우저의 주소 변경X)
+
+Forward 하는 방법
+1. sendRedirect() : 브라우저에서 요청하여 서버에서 받은 후 브라우저로 다시 보냄
+bind(attribute) 사용 가능 : servletContext, session(request는 사용불가)
+2. location.href="" : JS로 동작
+bind(attribute) 사용 가능 : servletContext, session(request는 사용불가)
+3. header : reflush 속성 사용
+bind(attribute) 사용 가능 : servletContext, session(request는 사용불가)
+4. forward
+bind(attribute) 사용 가능 : servletContext, session, request
+
+ServletContextListener : 웹애플리케이션의 이벤트에 대한 이벤트 리스너
+HttpSession : 서버에 요청할 때 생성됨. session은 메모리안에 존재
+요청은 한개, 요청을 받는곳은 여러개(고객이 요청하는 주문과 회사에서 받는 주문)
+ServletRequeset 생명 주기 : 브라우저가 요청을 하고 응답을 받을 때 까지
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
