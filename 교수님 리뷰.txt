@@ -35,10 +35,43 @@ HttpSession : 서버에 요청할 때 생성됨. session은 메모리안에 존�
 요청은 한개, 요청을 받는곳은 여러개(고객이 요청하는 주문과 회사에서 받는 주문)
 ServletRequeset 생명 주기 : 브라우저가 요청을 하고 응답을 받을 때 까지
 
-
-
-
-
+3.파일 전송
+1) 업로드 : 파일 확장자는 숨겨서 올려야됨
+첨부파일 업로드 양식 -> 첨부파일 서버에 저장
+isFormField=false : 파일이라는 뜻
+저장소 객체 생성 : DiskFileItemFactory factory = new DiskFileItemFactory();
+업로드 파일 임시로 저장할 경로 설정 : factory.setRepository(new File("c:\\upload"));
+파일 업로드 객체에 저장소 설정 : ServletFileUpload upload = new ServletFileUpload(factory);
+파일 업로드
+List<FileItem> items = upload.parseRequest(request);
+for (FileItem item : items) {
+if (item.isFormField()) {
+// 입력 값 출력
+System.out.println(item.getFieldName() + "=" + item.getString());
+} else {
+// 첨부 파일을 저장할 파일 객체를 생성
+File saveFile = new File("c:\\upload" + "\\" + item.getName());
+// 첨부파일을 저장 한다
+item.write(saveFile);
+}
+Select Last_Insertr_id() : 자동으로 값 증가. 마지막 auto_increment 값 리턴
+getRemoteAddr : 클라이언트 IP 추출
+2) 다운로드
+다운로드 링크를 달아줌 : ex. <li><a href="<c:url value='/download.do?filename=1snow.jpg'/>">image</a></li>
+이미지 소스를 달아줌 : ex. <img src="<c:url value='/download.do?filename=1snow.jpg'/>">
+response.setHeader("Cache-Control", "no-cache"); : 캐시 없음
+response.addHeader("Content-disposition", "attachment; fileName="+fileName); : 로컬에 다운로드할 파일 이름 지정
+파일 다운로드
+InputStream in = new FileInputStream(file);
+byte[] data=new byte[4096];
+while(true) {
+int readCount= in.read(data);
+if(readCount <=0) break;
+out.write(data, 0, readCount);
+}
+in.close();
+out.close();
+body : new FormData(변수명) : form으로 전달 된 매개변수들을 전달
 
 
 
